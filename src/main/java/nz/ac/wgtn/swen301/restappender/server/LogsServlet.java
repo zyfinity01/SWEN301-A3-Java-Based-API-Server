@@ -8,11 +8,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class LogsServlet extends HttpServlet {
     private static final Gson gson = new GsonBuilder().create();
+
 
     public LogsServlet() {
         // Default constructor
@@ -21,7 +23,29 @@ public class LogsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // Return all log entries in JSON format
-        String jsonResponse = gson.toJson(Persistency.DB);
+        int limit = (int) Double.parseDouble(req.getParameter("limit"));
+        String level = req.getParameter("level");
+
+        ArrayList<JsonObject> logs = new ArrayList<>();
+        int i = 0;
+        resp.getWriter().write(level);
+        for(JsonObject jo : Persistency.DB){
+            if(i <  limit){
+                if(level.equalsIgnoreCase("all")){
+                    logs.add(jo);
+                } else {
+                    if(level.equalsIgnoreCase(jo.get("level").getAsString())){
+                        logs.add(jo);
+                    }
+                }
+            }
+            limit++;
+        }
+        if(logs.isEmpty()){
+            resp.getWriter().write("No logs found");
+            return;
+        }
+        String jsonResponse = gson.toJson(logs);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(jsonResponse);
@@ -29,6 +53,7 @@ public class LogsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
         // Extract JSON string from request
         String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 
