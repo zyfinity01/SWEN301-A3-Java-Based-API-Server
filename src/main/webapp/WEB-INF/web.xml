@@ -12,6 +12,6 @@
 
     <servlet-mapping>
         <servlet-name>LogsServlet</servlet-name>
-        <url-pattern>logs</url-pattern>
+        <url-pattern>/logs</url-pattern>
     </servlet-mapping>
 </web-app>
