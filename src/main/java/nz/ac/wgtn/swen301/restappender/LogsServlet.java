@@ -1,4 +1,5 @@
-package nz.ac.wgtn.swen301.restappender.server;
+package nz.ac.wgtn.swen301.restappender;
+
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
