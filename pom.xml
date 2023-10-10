@@ -26,6 +26,14 @@
       <version>2.10.1</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.14.1</version>
+    </dependency>
+
+
+
     <!-- JUnit 5 for unit testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
