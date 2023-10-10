@@ -2,13 +2,13 @@ package nz.ac.wgtn.swen301.restappender.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.core.impl.Log4jLogEvent;
+import com.google.gson.JsonObject;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class LogsServlet extends HttpServlet {
@@ -32,16 +32,31 @@ public class LogsServlet extends HttpServlet {
         // Extract JSON string from request
         String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 
-        // Deserialize JSON to LogEvent object
-        LogEvent logEvent = gson.fromJson(jsonRequest, Log4jLogEvent.class);
+        // Parse JSON to JsonObject
+        JsonObject logEntry = gson.fromJson(jsonRequest, JsonObject.class);
 
-        // Add logEvent to DB
-        Persistency.DB.add(logEvent);
+        // Validate log entry
+        if (!validateLogEntry(logEntry)) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("Invalid log entry");
+            return;
+        }
+
+        // Check if log entry already exists
+        if (logEntryExists(logEntry)) {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
+            resp.getWriter().write("Log entry with this ID already exists");
+            return;
+        }
+
+        // Add logEntry to DB
+        Persistency.DB.add(logEntry);
 
         // Send response (acknowledgment)
+        resp.setStatus(HttpServletResponse.SC_CREATED);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
-        resp.getWriter().write(gson.toJson(logEvent)); // Echo back the added log event
+        resp.getWriter().write(gson.toJson(logEntry)); // Echo back the added log entry
     }
 
     @Override
@@ -53,5 +68,22 @@ public class LogsServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write("{\"status\": \"All logs deleted\"}");
+    }
+
+    private boolean validateLogEntry(JsonObject logEntry) {
+        // Perform validation directly on the JSON object
+        return logEntry.has("id") && !logEntry.get("id").getAsString().isEmpty() &&
+                logEntry.has("message") && !logEntry.get("message").getAsString().isEmpty() &&
+                logEntry.has("timestamp") && !logEntry.get("timestamp").getAsString().isEmpty() &&
+                logEntry.has("thread") && !logEntry.get("thread").getAsString().isEmpty() &&
+                logEntry.has("logger") && !logEntry.get("logger").getAsString().isEmpty() &&
+                logEntry.has("level") && !logEntry.get("level").getAsString().isEmpty();
+    }
+
+    private boolean logEntryExists(JsonObject logEntry) {
+        // Check existence directly on the JSON object
+        String id = logEntry.get("id").getAsString();
+        return Persistency.DB.stream()
+                .anyMatch(existingLogEntry -> existingLogEntry.get("id").getAsString().equals(id));
     }
 }
