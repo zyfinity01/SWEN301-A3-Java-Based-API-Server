@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestDeleteLogs {
 
@@ -42,6 +42,28 @@ public class TestDeleteLogs {
 
         assertEquals(201, postResponse.getStatus());
     }
+
+
+    @Test
+    public void testDeleteAllLogs() throws Exception {
+        addLogEntry();
+
+        assertFalse(Persistency.DB.isEmpty());
+
+        MockHttpServletRequest deleteRequest = new MockHttpServletRequest();
+        deleteRequest.setMethod("DELETE");
+        deleteRequest.setRequestURI("/restappender/logs");
+
+        MockHttpServletResponse deleteResponse = new MockHttpServletResponse();
+        servlet.doDelete(deleteRequest, deleteResponse);
+
+        assertEquals(200, deleteResponse.getStatus());
+        assertEquals("{\"status\": \"All logs deleted\"}", deleteResponse.getContentAsString());
+
+        // Ensure the logs are empty after the delete operation
+        assertTrue(Persistency.DB.isEmpty());
+    }
+
 
 
 }
