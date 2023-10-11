@@ -37,5 +37,32 @@ public class TestPostLogs {
         assertEquals(200, response.getStatus());
     }
 
+    @Test
+    public void testPostLog_withValidPayload() throws Exception {
+        String postPayload = "{" +
+                "\"id\":\"" + UUID.randomUUID() + "\"," +
+                "\"message\":\"Test log message\"," +
+                "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "\"," +
+                "\"thread\":\"main\"," +
+                "\"logger\":\"com.example.TestLogger\"," +
+                "\"level\":\"info\"," +
+                "\"errorDetails\":\"test error\"" +
+                "}";
+
+        MockHttpServletRequest postRequest = new MockHttpServletRequest();
+        postRequest.setMethod("POST");
+        postRequest.setRequestURI("/restappender/logs");
+        postRequest.setContentType("application/json");
+        postRequest.setContent(postPayload.getBytes());
+
+        MockHttpServletResponse postResponse = new MockHttpServletResponse();
+        servlet.doPost(postRequest, postResponse);
+
+        assertEquals(201, postResponse.getStatus());
+        assertEquals(postPayload, postResponse.getContentAsString());
+    }
+
+
+
 
 }
