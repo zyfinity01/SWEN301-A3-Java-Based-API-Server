@@ -65,5 +65,23 @@ public class TestDeleteLogs {
     }
 
 
+    @Test
+    public void testDeleteLogs_WhenNoLogsExist() throws Exception {
+        // Ensure the logs are already empty before the test
+        Persistency.DB.clear();
+
+        // Proceed with the DELETE request
+        MockHttpServletRequest deleteRequest = new MockHttpServletRequest();
+        deleteRequest.setMethod("DELETE");
+        deleteRequest.setRequestURI("/restappender/logs");
+
+        MockHttpServletResponse deleteResponse = new MockHttpServletResponse();
+        servlet.doDelete(deleteRequest, deleteResponse);
+
+        assertEquals(200, deleteResponse.getStatus());
+        assertEquals("{\"status\": \"All logs deleted\"}", deleteResponse.getContentAsString());
+    }
+
+
 
 }
