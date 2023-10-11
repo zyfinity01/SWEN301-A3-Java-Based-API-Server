@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +29,6 @@ public class LogsServlet extends HttpServlet {
 
         ArrayList<JsonObject> logs = new ArrayList<>();
         int i = 0;
-        resp.getWriter().write(level);
         for(JsonObject jo : Persistency.DB){
             if(i <  limit){
                 if(level.equalsIgnoreCase("all")){
@@ -39,7 +39,7 @@ public class LogsServlet extends HttpServlet {
                     }
                 }
             }
-            limit++;
+            i++;
         }
         if(logs.isEmpty()){
             resp.getWriter().write("No logs found");
