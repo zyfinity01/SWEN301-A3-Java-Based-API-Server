@@ -87,7 +87,50 @@ public class TestPostLogs {
         assertEquals("Invalid log entry", postResponse.getContentAsString());
     }
 
+    @Test
+    public void testPostLog_withDuplicateID() throws Exception {
+        String id = UUID.randomUUID().toString();
+        String postPayload1 = "{" +
+                "\"id\":\"" + id + "\"," +
+                "\"message\":\"Test log message 1\"," +
+                "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "\"," +
+                "\"thread\":\"main\"," +
+                "\"logger\":\"com.example.TestLogger1\"," +
+                "\"level\":\"info\"," +
+                "\"errorDetails\":\"test error 1\"" +
+                "}";
 
+        String postPayload2 = "{" +
+                "\"id\":\"" + id + "\"," +
+                "\"message\":\"Test log message 2\"," +
+                "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "\"," +
+                "\"thread\":\"main\"," +
+                "\"logger\":\"com.example.TestLogger2\"," +
+                "\"level\":\"info\"," +
+                "\"errorDetails\":\"test error 2\"" +
+                "}";
+
+        // Post first log
+        MockHttpServletRequest postRequest1 = new MockHttpServletRequest();
+        postRequest1.setMethod("POST");
+        postRequest1.setRequestURI("/restappender/logs");
+        postRequest1.setContentType("application/json");
+        postRequest1.setContent(postPayload1.getBytes());
+        MockHttpServletResponse postResponse1 = new MockHttpServletResponse();
+        servlet.doPost(postRequest1, postResponse1);
+        assertEquals(201, postResponse1.getStatus());
+
+        // Post second log with duplicate ID
+        MockHttpServletRequest postRequest2 = new MockHttpServletRequest();
+        postRequest2.setMethod("POST");
+        postRequest2.setRequestURI("/restappender/logs");
+        postRequest2.setContentType("application/json");
+        postRequest2.setContent(postPayload2.getBytes());
+        MockHttpServletResponse postResponse2 = new MockHttpServletResponse();
+        servlet.doPost(postRequest2, postResponse2);
+        assertEquals(409, postResponse2.getStatus());
+        assertEquals("Log entry with this ID already exists", postResponse2.getContentAsString());
+    }
 
 
 
