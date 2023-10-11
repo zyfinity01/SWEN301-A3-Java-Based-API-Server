@@ -62,6 +62,33 @@ public class TestPostLogs {
         assertEquals(postPayload, postResponse.getContentAsString());
     }
 
+    @Test
+    public void testPostLog_withInvalidPayload() throws Exception {
+        String postPayload = "{" +
+                "\"id\":\"" + UUID.randomUUID() + "\"," +
+                "\"message\":\"Test log message\"," +
+                "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "\"," +
+                "\"thread\":\"main\"," +
+                "\"logger\":\"\"," + // Invalid logger (empty)
+                "\"level\":\"info\"," +
+                "\"errorDetails\":\"test error\"" +
+                "}";
+
+        MockHttpServletRequest postRequest = new MockHttpServletRequest();
+        postRequest.setMethod("POST");
+        postRequest.setRequestURI("/restappender/logs");
+        postRequest.setContentType("application/json");
+        postRequest.setContent(postPayload.getBytes());
+
+        MockHttpServletResponse postResponse = new MockHttpServletResponse();
+        servlet.doPost(postRequest, postResponse);
+
+        assertEquals(400, postResponse.getStatus());
+        assertEquals("Invalid log entry", postResponse.getContentAsString());
+    }
+
+
+
 
 
 
