@@ -14,4 +14,14 @@
         <servlet-name>LogsServlet</servlet-name>
         <url-pattern>/logs</url-pattern>
     </servlet-mapping>
+
+    <!-- StatsCSVServlet registration -->
+    <servlet>
+        <servlet-name>StatsCSVServlet</servlet-name>
+        <servlet-class>nz.ac.wgtn.swen301.restappender.server.StatsCSVServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StatsCSVServlet</servlet-name>
+        <url-pattern>/stats-csv</url-pattern>
+    </servlet-mapping>
 </web-app>
