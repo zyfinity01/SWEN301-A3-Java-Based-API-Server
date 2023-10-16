@@ -34,4 +34,14 @@
         <servlet-name>StatsHTMLServlet</servlet-name>
         <url-pattern>/stats-html</url-pattern>
     </servlet-mapping>
+
+    <!-- StatsExcelServlet registration -->
+    <servlet>
+        <servlet-name>StatsExcelServlet</servlet-name>
+        <servlet-class>nz.ac.wgtn.swen301.restappender.server.StatsExcelServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StatsExcelServlet</servlet-name>
+        <url-pattern>/stats-excel</url-pattern>
+    </servlet-mapping>
 </web-app>
