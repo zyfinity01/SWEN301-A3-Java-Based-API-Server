@@ -67,6 +67,18 @@
       <version>2.17.1</version> <!-- use the appropriate version -->
     </dependency>
 
+    <!-- Apache POI for Excel support -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>5.2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>5.2.2</version>
+    </dependency>
+
 
     <!-- JUnit 5 -->
     <dependency>
