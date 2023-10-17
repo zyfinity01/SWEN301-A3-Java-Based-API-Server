@@ -81,10 +81,8 @@ public class TestStatsCSV {
         assertEquals(200, response.getStatus());
         assertTrue(response.getContentType().contains("text/csv"));
 
-        // Here you can add more specific checks, such as parsing the CSV to ensure the counts for each logger and level are correct
         String csvContent = response.getContentAsString();
         String[] rows = csvContent.split("\n");
-        // Assuming the first row is the header row
         for(int i = 0; i < rows.length; i++) {
             System.out.println(rows[i]);
         }
