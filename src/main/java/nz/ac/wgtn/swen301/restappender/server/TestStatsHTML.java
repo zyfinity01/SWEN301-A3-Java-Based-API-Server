@@ -84,7 +84,7 @@ public class TestStatsHTML {
         assertEquals(200, response.getStatus());
         assertTrue(response.getContentType().contains("text/html"));
 
-        // Use jsoup to parse the HTML content and assert on elements/values
+        // Use jsoup to parse the HTML content
         Document doc = Jsoup.parse(response.getContentAsString());
 
         Element table = doc.select("table").first();
@@ -94,10 +94,7 @@ public class TestStatsHTML {
         assertEquals("logger", headerRow.select("th").get(0).text());
         assertEquals("ALL", headerRow.select("th").get(1).text());
         assertEquals("TRACE", headerRow.select("th").get(2).text());
-        // Add more assertions for other headers
 
-        // Here you can add more checks, such as counting rows, asserting on specific row values, etc.
-        // Example:
         Element firstDataRow = table.select("tr").get(1);
         assertEquals("com.example.Logger1", firstDataRow.select("td").get(0).text());
         // Add more assertions for other data rows and cells
@@ -115,10 +112,8 @@ public class TestStatsHTML {
         assertEquals(200, response.getStatus());
         assertTrue(response.getContentType().contains("text/html"));
 
-        // Use jsoup to parse the HTML content
         Document doc = Jsoup.parse(response.getContentAsString());
 
-        // Generate expected HTML based on mock logs
         StringBuilder expectedHTML = new StringBuilder();
         expectedHTML.append("<!DOCTYPE html>")
                 .append("<html>")
@@ -138,10 +133,8 @@ public class TestStatsHTML {
         }
         expectedHTML.append("</table>").append("</body>").append("</html>");
 
-        // Use jsoup to parse the expected HTML content
         Document expectedDoc = Jsoup.parse(expectedHTML.toString());
 
-        // Compare the generated HTML with the expected HTML using jsoup
         Elements expectedRows = expectedDoc.select("table > tbody > tr");
         Elements actualRows = doc.select("table > tbody > tr");
 
