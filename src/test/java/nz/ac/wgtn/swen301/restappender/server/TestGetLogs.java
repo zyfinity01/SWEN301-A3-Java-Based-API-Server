@@ -77,7 +77,7 @@ public class TestGetLogs {
 
         // Define the expected JSON payload to send in the POST request
         String postPayload = "{" +
-                "\"id\":\"343432dsf34432443s2323\"," +
+                "\"id\":\"d290f1ee-6c54-4b01-90e6-d701748f0851\"," +
                 "\"message\":\"application started\"," +
                 "\"timestamp\":\"04-05-2021 13:30:45\"," +
                 "\"thread\":\"main\"," +
