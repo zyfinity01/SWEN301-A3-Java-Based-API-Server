@@ -133,6 +133,160 @@ public class TestPostLogs {
     }
 
 
+    @Test
+    public void testPostLog_withInvalidUUID() throws Exception {
+        String postPayload = "{" +
+                "\"id\":\"343432dsf34432443s2323\"," +
+                "\"message\":\"Test log message\"," +
+                "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "\"," +
+                "\"thread\":\"main\"," +
+                "\"logger\":\"com.example.TestLogger\"," +
+                "\"level\":\"info\"," +
+                "\"errorDetails\":\"test error\"" +
+                "}";
+
+        MockHttpServletRequest postRequest = new MockHttpServletRequest();
+        postRequest.setMethod("POST");
+        postRequest.setRequestURI("/restappender/logs");
+        postRequest.setContentType("application/json");
+        postRequest.setContent(postPayload.getBytes());
+
+        MockHttpServletResponse postResponse = new MockHttpServletResponse();
+        servlet.doPost(postRequest, postResponse);
+
+        assertEquals(400, postResponse.getStatus());
+        assertEquals("Invalid log entry", postResponse.getContentAsString());
+    }
+
+    @Test
+    public void testPostLog_withInvalidTimestamp() throws Exception {
+        String postPayload = "{" +
+                "\"id\":\"" + UUID.randomUUID() + "\"," +
+                "\"message\":\"Test log message\"," +
+                "\"timestamp\":\"04-05-2023\"," +
+                "\"thread\":\"main\"," +
+                "\"logger\":\"com.example.TestLogger\"," +
+                "\"level\":\"info\"," +
+                "\"errorDetails\":\"test error\"" +
+                "}";
+
+        MockHttpServletRequest postRequest = new MockHttpServletRequest();
+        postRequest.setMethod("POST");
+        postRequest.setRequestURI("/restappender/logs");
+        postRequest.setContentType("application/json");
+        postRequest.setContent(postPayload.getBytes());
+
+        MockHttpServletResponse postResponse = new MockHttpServletResponse();
+        servlet.doPost(postRequest, postResponse);
+
+        assertEquals(400, postResponse.getStatus());
+        assertEquals("Invalid log entry", postResponse.getContentAsString());
+    }
+
+    @Test
+    public void testPostLog_withInvalidLoggerLevel() throws Exception {
+        String postPayload = "{" +
+                "\"id\":\"" + UUID.randomUUID() + "\"," +
+                "\"message\":\"Test log message\"," +
+                "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "\"," +
+                "\"thread\":\"main\"," +
+                "\"logger\":\"com.example.TestLogger\"," +
+                "\"level\":\"invalid_level\"," +
+                "\"errorDetails\":\"test error\"" +
+                "}";
+
+        MockHttpServletRequest postRequest = new MockHttpServletRequest();
+        postRequest.setMethod("POST");
+        postRequest.setRequestURI("/restappender/logs");
+        postRequest.setContentType("application/json");
+        postRequest.setContent(postPayload.getBytes());
+
+        MockHttpServletResponse postResponse = new MockHttpServletResponse();
+        servlet.doPost(postRequest, postResponse);
+
+        assertEquals(400, postResponse.getStatus());
+        assertEquals("Invalid log entry", postResponse.getContentAsString());
+    }
+
+    @Test
+    public void testPostLog_withMissingKey() throws Exception {
+        String postPayload = "{" +
+                "\"id\":\"" + UUID.randomUUID() + "\"," +
+                "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "\"," +
+                "\"thread\":\"main\"," +
+                "\"logger\":\"com.example.TestLogger\"," +
+                "\"level\":\"info\"," +
+                "\"errorDetails\":\"test error\"" +
+                "}";
+
+        MockHttpServletRequest postRequest = new MockHttpServletRequest();
+        postRequest.setMethod("POST");
+        postRequest.setRequestURI("/restappender/logs");
+        postRequest.setContentType("application/json");
+        postRequest.setContent(postPayload.getBytes());
+
+        MockHttpServletResponse postResponse = new MockHttpServletResponse();
+        servlet.doPost(postRequest, postResponse);
+
+        assertEquals(400, postResponse.getStatus());
+        assertEquals("Invalid log entry", postResponse.getContentAsString());
+    }
+
+    @Test
+    public void testPostLog_withNullValue() throws Exception {
+        String postPayload = "{" +
+                "\"id\":null," +
+                "\"message\":\"Test log message\"," +
+                "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "\"," +
+                "\"thread\":\"main\"," +
+                "\"logger\":\"com.example.TestLogger\"," +
+                "\"level\":\"info\"," +
+                "\"errorDetails\":\"test error\"" +
+                "}";
+
+        MockHttpServletRequest postRequest = new MockHttpServletRequest();
+        postRequest.setMethod("POST");
+        postRequest.setRequestURI("/restappender/logs");
+        postRequest.setContentType("application/json");
+        postRequest.setContent(postPayload.getBytes());
+
+        MockHttpServletResponse postResponse = new MockHttpServletResponse();
+        servlet.doPost(postRequest, postResponse);
+
+        assertEquals(400, postResponse.getStatus());
+        assertEquals("Invalid log entry", postResponse.getContentAsString());
+    }
+
+    @Test
+    public void testPostLog_withEmptyValue() throws Exception {
+        String postPayload = "{" +
+                "\"id\":\"" + UUID.randomUUID() + "\"," +
+                "\"message\":\"\"," +
+                "\"timestamp\":\"" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")) + "\"," +
+                "\"thread\":\"main\"," +
+                "\"logger\":\"com.example.TestLogger\"," +
+                "\"level\":\"info\"," +
+                "\"errorDetails\":\"test error\"" +
+                "}";
+
+        MockHttpServletRequest postRequest = new MockHttpServletRequest();
+        postRequest.setMethod("POST");
+        postRequest.setRequestURI("/restappender/logs");
+        postRequest.setContentType("application/json");
+        postRequest.setContent(postPayload.getBytes());
+
+        MockHttpServletResponse postResponse = new MockHttpServletResponse();
+        servlet.doPost(postRequest, postResponse);
+
+        assertEquals(400, postResponse.getStatus());
+        assertEquals("Invalid log entry", postResponse.getContentAsString());
+    }
+
+
+
+
+
+
 
 
 }
