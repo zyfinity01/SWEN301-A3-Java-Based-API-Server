@@ -76,7 +76,7 @@ public class TestStatsHTML {
     public void testGetStatsHTML() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod("GET");
-        request.setRequestURI("/restappender/stats-html");
+        request.setRequestURI("/restappender/stats/html");
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         servlet.doGet(request, response);
@@ -104,7 +104,7 @@ public class TestStatsHTML {
     public void testExpectedHTML() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod("GET");
-        request.setRequestURI("/restappender/stats-html");
+        request.setRequestURI("/restappender/stats/html");
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         servlet.doGet(request, response);

@@ -76,7 +76,7 @@ public class TestStatsXLS {
     public void testGetStatsExcel() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod("GET");
-        request.setRequestURI("/restappender/stats-excel");
+        request.setRequestURI("/restappender/stats/excel");
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         servlet.doGet(request, response);

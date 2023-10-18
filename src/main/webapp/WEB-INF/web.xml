@@ -22,7 +22,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>StatsCSVServlet</servlet-name>
-        <url-pattern>/stats-csv</url-pattern>
+        <url-pattern>/stats/csv</url-pattern>
     </servlet-mapping>
 
     <!-- StatsHTMLServlet registration -->
@@ -32,7 +32,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>StatsHTMLServlet</servlet-name>
-        <url-pattern>/stats-html</url-pattern>
+        <url-pattern>/stats/html</url-pattern>
     </servlet-mapping>
 
     <!-- StatsExcelServlet registration -->
@@ -42,6 +42,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>StatsExcelServlet</servlet-name>
-        <url-pattern>/stats-excel</url-pattern>
+        <url-pattern>/stats/excel</url-pattern>
     </servlet-mapping>
 </web-app>

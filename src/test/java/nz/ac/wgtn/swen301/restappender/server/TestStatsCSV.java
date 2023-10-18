@@ -73,7 +73,7 @@ public class TestStatsCSV {
     public void testGetStatsCSV() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod("GET");
-        request.setRequestURI("/restappender/stats-csv");
+        request.setRequestURI("/restappender/stats/csv");
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         servlet.doGet(request, response);
@@ -94,7 +94,7 @@ public class TestStatsCSV {
     public void testCSVOutput() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setMethod("GET");
-        request.setRequestURI("/stats-csv");
+        request.setRequestURI("/stats/csv");
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         servlet.doGet(request, response);
