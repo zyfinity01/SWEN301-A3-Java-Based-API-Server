@@ -99,7 +99,6 @@ public class LogsServlet extends HttpServlet {
         resp.getWriter().write("{\"status\": \"All logs deleted\"}");
     }
 
-
     private boolean logEntryExists(JsonObject logEntry) {
         // Check existence directly on the JSON object
         String id = logEntry.get("id").getAsString();
