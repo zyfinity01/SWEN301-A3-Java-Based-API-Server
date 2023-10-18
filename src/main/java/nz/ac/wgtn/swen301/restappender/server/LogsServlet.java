@@ -9,8 +9,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class LogsServlet extends HttpServlet {
@@ -95,15 +99,15 @@ public class LogsServlet extends HttpServlet {
         resp.getWriter().write("{\"status\": \"All logs deleted\"}");
     }
 
-    private boolean validateLogEntry(JsonObject logEntry) {
-        // Perform validation directly on the JSON object
-        return logEntry.has("id") && !logEntry.get("id").getAsString().isEmpty() &&
-                logEntry.has("message") && !logEntry.get("message").getAsString().isEmpty() &&
-                logEntry.has("timestamp") && !logEntry.get("timestamp").getAsString().isEmpty() &&
-                logEntry.has("thread") && !logEntry.get("thread").getAsString().isEmpty() &&
-                logEntry.has("logger") && !logEntry.get("logger").getAsString().isEmpty() &&
-                logEntry.has("level") && !logEntry.get("level").getAsString().isEmpty();
-    }
+//    private boolean validateLogEntry(JsonObject logEntry) {
+//        // Perform validation directly on the JSON object
+//        return logEntry.has("id") && !logEntry.get("id").getAsString().isEmpty() &&
+//                logEntry.has("message") && !logEntry.get("message").getAsString().isEmpty() &&
+//                logEntry.has("timestamp") && !logEntry.get("timestamp").getAsString().isEmpty() &&
+//                logEntry.has("thread") && !logEntry.get("thread").getAsString().isEmpty() &&
+//                logEntry.has("logger") && !logEntry.get("logger").getAsString().isEmpty() &&
+//                logEntry.has("level") && !logEntry.get("level").getAsString().isEmpty();
+//    }
 
     private boolean logEntryExists(JsonObject logEntry) {
         // Check existence directly on the JSON object
@@ -111,4 +115,49 @@ public class LogsServlet extends HttpServlet {
         return Persistency.DB.stream()
                 .anyMatch(existingLogEntry -> existingLogEntry.get("id").getAsString().equals(id));
     }
+
+    private boolean validateLogEntry(JsonObject logEntry) {
+        // Check if all required keys are present
+        if (!logEntry.has("id") || !logEntry.has("message") || !logEntry.has("timestamp") ||
+                !logEntry.has("thread") || !logEntry.has("logger") || !logEntry.has("level") ||
+                !logEntry.has("errorDetails")) {
+            return false;
+        }
+
+        // Ensure all properties have non-null and non-empty values
+        if (logEntry.get("id").isJsonNull() || logEntry.get("id").getAsString().trim().isEmpty() ||
+                logEntry.get("message").isJsonNull() || logEntry.get("message").getAsString().trim().isEmpty() ||
+                logEntry.get("timestamp").isJsonNull() || logEntry.get("timestamp").getAsString().trim().isEmpty() ||
+                logEntry.get("thread").isJsonNull() || logEntry.get("thread").getAsString().trim().isEmpty() ||
+                logEntry.get("logger").isJsonNull() || logEntry.get("logger").getAsString().trim().isEmpty() ||
+                logEntry.get("level").isJsonNull() || logEntry.get("level").getAsString().trim().isEmpty() ||
+                logEntry.get("errorDetails").isJsonNull() || logEntry.get("errorDetails").getAsString().trim().isEmpty()) {
+            return false;
+        }
+
+        // Validate ID as UUID
+        try {
+            UUID.fromString(logEntry.get("id").getAsString());
+        } catch (IllegalArgumentException e) {
+            return false; // Invalid UUID format
+        }
+
+        // Validate timestamp
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        sdf.setLenient(false); // This will make sure the date string strictly follows the pattern
+        try {
+            sdf.parse(logEntry.get("timestamp").getAsString());
+        } catch (ParseException e) {
+            return false; // Invalid timestamp format
+        }
+
+        // Validate logger level
+        List<String> validLevels = Arrays.asList("all", "debug", "info", "warn", "error", "fatal", "trace", "off");
+        if (!validLevels.contains(logEntry.get("level").getAsString().toLowerCase())) {
+            return false; // Invalid logger level
+        }
+
+        return true;
+    }
+
 }
