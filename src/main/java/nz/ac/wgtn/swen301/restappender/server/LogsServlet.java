@@ -99,15 +99,6 @@ public class LogsServlet extends HttpServlet {
         resp.getWriter().write("{\"status\": \"All logs deleted\"}");
     }
 
-//    private boolean validateLogEntry(JsonObject logEntry) {
-//        // Perform validation directly on the JSON object
-//        return logEntry.has("id") && !logEntry.get("id").getAsString().isEmpty() &&
-//                logEntry.has("message") && !logEntry.get("message").getAsString().isEmpty() &&
-//                logEntry.has("timestamp") && !logEntry.get("timestamp").getAsString().isEmpty() &&
-//                logEntry.has("thread") && !logEntry.get("thread").getAsString().isEmpty() &&
-//                logEntry.has("logger") && !logEntry.get("logger").getAsString().isEmpty() &&
-//                logEntry.has("level") && !logEntry.get("level").getAsString().isEmpty();
-//    }
 
     private boolean logEntryExists(JsonObject logEntry) {
         // Check existence directly on the JSON object
